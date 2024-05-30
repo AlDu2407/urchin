@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/matheusgomes28/urchin/common"
@@ -16,6 +17,7 @@ type Database interface {
 	AddPost(title string, excerpt string, content string) (int, error)
 	ChangePost(id int, title string, excerpt string, content string) error
 	DeletePost(id int) (int, error)
+	AddPage(title string, content string, link string, parentId *int) (common.Page, error)
 }
 
 type SqlDatabase struct {
@@ -139,6 +141,35 @@ func (db SqlDatabase) DeletePost(id int) (int, error) {
 	}
 
 	return int(rows_affected), nil
+}
+
+func (db SqlDatabase) AddPage(title string, content string, link string, parentId *int) (page common.Page, err error) {
+	var pId sql.NullString
+	if parentId == nil {
+		pId = sql.NullString{}
+	} else {
+		pId = sql.NullString{
+			String: strconv.Itoa(*parentId),
+			Valid:  true,
+		}
+	}
+	row := db.Connection.QueryRow(`INSERT INTO pages(title, content, link, parent_id) 
+	VALUES(?, ?, ? , ?) RETURNING id, title, link, parent_id`, title, content, link, pId)
+
+	if row == nil {
+		return common.Page{}, errors.New("could not create page")
+	}
+
+	err = row.Scan(&page.Id, &page.Title, &page.Link, &page.ParentId)
+	if err != nil {
+		log.Warn().Msgf("could not get last ID: %v", err)
+		return common.Page{}, err
+	}
+
+	// TODO : possibly unsafe int conv,
+	// make sure all IDs are i64 in the
+	// future
+	return page, nil
 }
 
 func MakeSqlConnection(user string, password string, address string, port int, database string) (SqlDatabase, error) {

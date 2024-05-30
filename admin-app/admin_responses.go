@@ -21,3 +21,10 @@ type GetImageResponse struct {
 	AltText   string `json:"alt_text"`
 	Extension string `json:"extension"`
 }
+
+type PostPageResponse struct {
+	Id       int    `json:"id"`
+	Title    string `json:"title"`
+	Link     string `json:"link"`
+	ParentId *int   `json:"parentId,omitempty"`
+}

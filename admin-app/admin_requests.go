@@ -30,3 +30,9 @@ type AddImageRequest struct {
 type DeleteImageBinding struct {
 	Name string `uri:"name" binding:"required"`
 }
+
+type AddPageRequest struct {
+	Title    string `json:"title" binding:"required"`
+	Content  string `json:"content" binding:"required"`
+	ParentId *int   `json:"parentId,omitempty"`
+}

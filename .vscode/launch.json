@@ -11,7 +11,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/cmd/urchin",
             "cwd": "${workspaceFolder}",
-            "envFile": "${workspaceFolder}/envfile",
+            "envFile": "${workspaceFolder}/.dev.env",
             "args": [
                 "--config",
                 "${workspaceFolder}/urchin_config.toml"
@@ -24,7 +24,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}/cmd/urchin-admin",
             "cwd": "${workspaceFolder}",
-            "envFile": "${workspaceFolder}/envfile",
+            "envFile": "${workspaceFolder}/.dev.env",
             "args": [
                 "--config",
                 "${workspaceFolder}/urchin_config.toml"
